@@ -4,5 +4,5 @@
 /**
  * 
  */
-module OOP {
+module Curso {
 }

@@ -1,0 +1,24 @@
+stages:
+  - tag
+
+create_tag:
+  stage: tag
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  rules:
+    - if: $TAG =~ /[0-9][0-9]*\.[0-9][0-9]*\.0$/
+      when: on_success
+  script:
+    - echo "Criando Tag!"
+  release:
+    name: 'Tag ${TAG}'
+    description: '${TAG}'
+    tag_name: '${TAG}'
+  allow_failure: true
+
+tag_necessity_check:
+  stage: tag
+  rules:
+    - if: $TAG !~ /[0-9][0-9]*\.[0-9][0-9]*\.0$/
+      when: on_success
+  script:
+    - echo "Sem necessidade de Tag!"

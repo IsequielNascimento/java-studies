@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee"
+    xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-facesconfig_2_3.xsd" version="2.3">
+	
+	<managed-bean>
+	    <managed-bean-name>now</managed-bean-name>
+	    <managed-bean-class>java.util.Date</managed-bean-class>
+	    <managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+
+	<application>
+		<resource-bundle>
+			<base-name>application</base-name>
+			<var>app</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>messages</base-name>
+			<var>msg</var>
+		</resource-bundle>
+		<resource-bundle>
+			<base-name>maven</base-name>
+			<var>mvn</var>
+		</resource-bundle>
+		
+		<message-bundle>
+			messages
+		</message-bundle>
+	</application>
+	
+	<lifecycle>
+		<!-- gerenciador de autorização. -->
+		<phase-listener>br.jus.trece.blank.listener.AutorizacaoListener</phase-listener>
+	</lifecycle>
+
+	<factory>
+		<!-- manipulador de exceção. -->
+		<exception-handler-factory>br.jus.trece.blank.exception.CustomExceptionHandlerFactory</exception-handler-factory>
+	</factory>
+	
+</faces-config>

@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+  blank:
+    image: nexus.tre-ce.jus.br/blank:${VERSAO}-hmg
+    ports:
+      - '8400:8080'
+    networks:
+      - trece
+    restart: unless-stopped
+      
+networks:
+  trece:
+    external: true

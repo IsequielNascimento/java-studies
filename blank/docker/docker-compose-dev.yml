@@ -1,0 +1,18 @@
+version: '3.3'
+services:
+  blank:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+      args:
+        AMBIENTE_TRE: DESENVOLVIMENTO
+        BRANCH: -dev
+    ports:
+      - '8400:8080'
+    networks:
+      - trece
+    restart: unless-stopped
+      
+networks:
+  trece:
+    external: true

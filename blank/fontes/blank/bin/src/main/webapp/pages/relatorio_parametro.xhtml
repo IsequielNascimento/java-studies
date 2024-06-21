@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:p="http://primefaces.org/ui" template="/layout/template.xhtml">
+
+	<ui:define name="content">
+		<h:body>
+			<h:form id="frmParametro">
+				<p:focus for="relatorio"/>
+			
+				<p:panelGrid columns="1" layout="grid" styleClass="panelgrid-noborder">
+					<h:outputText value="Relatório de parâmetro" style="font-size: 14px;" styleClass="label-negrito"/>
+					
+					<hr class="hr-header"/>
+					
+					<p:messages id="msgParametro" redisplay="false" closable="true"/>
+					
+					<p:panel style="margin-bottom:0.5em;">
+						<h:panelGrid columns="2" width="100%" columnClasses="nome largura20" rowClasses="valor">
+							<f:facet name="header">
+								<div align="left">
+									<hr class="hr-header"/>
+								</div>
+							</f:facet>
+							
+							<p:outputLabel value="Relatório:" for="relatorio"/>
+							<p:selectOneMenu value="#{relatorioParametroBean.relatorio}" id="relatorio" required="true" requiredMessage="#{msg['validacao.relatorio.RELATORIO']}">
+								<f:selectItem noSelectionOption="true" itemLabel="#{msg['rotulo.ESCOLHA']}"/>
+								
+								<f:selectItems value="#{relatorioParametroBean.relatorios}" var="relatorio" itemLabel="#{relatorio.label}"/>
+								
+								<p:ajax event="change" listener="#{relatorioParametroBean.onAlterarRelatorio()}" update="opnParametro" resetValues="true"/>
+							</p:selectOneMenu>
+						</h:panelGrid>
+	
+						<p:outputPanel id="opnParametro">
+							<h:panelGrid columns="2" width="100%" columnClasses="nome largura20" rowClasses="valor" style="margin-top: -8px;">
+								<f:facet name="footer">
+									<hr class="hr-footer"/>
+									
+									<p:outputLabel value="* campo obrigatório"/>
+									<br/><br/>
+									
+									<p:commandButton value="Emitir" icon="fa fa-print" action="#{relatorioParametroBean.emitir()}" ajax="false"/> 
+								</f:facet>
+							</h:panelGrid>
+						</p:outputPanel>
+					</p:panel>
+				</p:panelGrid>
+			</h:form>
+		</h:body>
+	</ui:define>
+
+</ui:composition>

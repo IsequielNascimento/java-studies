@@ -1,0 +1,27 @@
+Criar a estrutura inicial de pastas, webhooks etc. no repositório git remoto gitlab.
+
+Caso o novo sistema seja executado a partir de container docker, criar no gitlab as variáveis de CI/CD DOCKER_AUTH_CONFIG, WEBHOOK, WEBHOOK_HMG com os valores fornecidos pelo Portainer e habilitar o Runner padrão SEDSC para o novo sistema.
+
+Criar o esquema inicial do novo sistema em DESEN, sempre se baseando nas tabelas existentes no esquema blank. Tanto a estrutura (tabelas, visões, sequências etc.) quanto os dados das tabelas do esquema blank devem ser espelhados no novo esquema.
+
+Dar permissão de consulta nas tabelas FUNCIONALIDADE, PERFIL, PERFIL_FUNCIONALIDADE, PERFIL_VW_UNIDADE_DADOS e SISTEMA do esquema pandora, e na tabela MV_ZONA e na visão VW_UNIDADE do esquema dados_corporativos para o novo esquema criado em desenvolvimento.
+
+Substituir o arquivo <usuário>\.m2\archetype-catalog.xml pelo disponível em \\ce3\secoes\sti\cosis\sedsc\Downloads\maven.
+
+Caso não haja ainda nenhum código-fonte para o novo sistema no repositório git remoto, criar novo Maven Project, tendo como modelo de archetype br.jus.trece, e posteriormente vincular a pasta Fontes do novo sistema ao repositório git remoto criado inicialmente. Caso contrário, clonar via git o novo sistema e trabalhar somente com a pasta Fontes.
+
+Substituir os arquivos messages.properties e application.properties do novo projeto por aqueles do blank.
+
+No arquivo <sistema>-ds.xml, alterar a conexão para o banco de desenvolvimento. 
+
+No arquivo application.properties do novo sistema, alterar a propriedade login.ERRO para o login do desenvolvedor responsável. Caso seja mais de um, separar logins com vírgula. Caso tenha substituído o arquivo por aquele do blank, verificar propriedades sistema.SIGLA e sistema.NOME.
+
+Nos arquivos persistence.xml e web.xml, verificar a configuração para desenvolvimento. Antes de cada deploy, esses mesmos arquivos devem ser modificados. Somente no arquivo persistence.xml, verificar o esquema do banco de dados do novo sistema.
+
+Caso o novo sistema seja executado a partir de container docker, alterar o arquivo .gitlab-ci.yml na pasta raiz do novo sistema e os arquivos Dockerfile, docker-compose-dev.yml, docker-compose-hmg.yml, docker-compose.yml, standalone-dev.xml, standalone-hmg.xml, standalone.xml e .env na pasta docker de acordo com as características do novo sistema. Antes de cada deploy, para que o pipeline do novo sistema consiga fazer o processo de deploy em homologação e produção, o arquivo .env deve ser modificado de acordo com a versão especificado no arquivo pom.xml do novo sistema.
+
+Incluir o novo sistema e pelo menos um perfil dele com funcionalidade no pandora (http://localhost:8080/pandora/), de forma similar ao blank. No cadastro de sistema, informar também os campos gestor, gestor de acesso e gestor técnico do novo sistema, pois essas informações são utilizadas posteriormente no mesmo.
+
+Com o sistema criado no pandora, informar o valor de ID_SISTEMA da tabela PARAMETRO do novo sistema a partir do campo ID recém criado da tabela SISTEMA do pandora.
+
+Substituir o arquivo .gitignore do novo sistema por aquele similar ao blank.

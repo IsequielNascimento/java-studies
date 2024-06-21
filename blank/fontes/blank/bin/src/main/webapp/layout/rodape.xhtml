@@ -1,0 +1,12 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+	<h:panelGrid cellpadding="0" cellspacing="0" border="0" width="100%">
+		<h:outputLabel value="#{app['sistema.SIGLA']} | #{mvn['sistema.VERSAO']}" style="font-size: 11px;"/>
+		<p:outputPanel>
+			<i class="fa fa-server" style="font-size: 0.8em;"/>
+			<h:outputLabel value="#{ambienteUtil.getDescricao()}" style="font-size: 11px; margin-left: 0.5em;"/>
+		</p:outputPanel>
+	</h:panelGrid>
+		
+</ui:composition>

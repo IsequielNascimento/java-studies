@@ -1,0 +1,167 @@
+<?xml version='1.0' encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:pe="http://primefaces.org/ui/extensions" template="/layout/template.xhtml">
+
+	<ui:define name="content">
+		<h:form id="frmNoticia">
+			<p:focus for="dtbNoticia:globalFilter"/>
+		
+			<p:panelGrid columns="1" layout="grid" styleClass="panelgrid-noborder">
+				<p:outputPanel>
+					<i class="fa fa-rss"/>
+					&nbsp;
+					<h:outputText value="Cadastro de notícia" style="font-size: 14px;" styleClass="label-negrito"/>
+				</p:outputPanel>
+				
+				<hr class="hr-header"/>
+				
+				<p:messages id="msgNoticia" redisplay="false" closable="true"/>
+				
+				<p:dataTable id="dtbNoticia" var="noticia" widgetVar="dtb_noticia" value="#{cadastroNoticiaBean.noticias}" filteredValue="#{cadastroNoticiaBean.filtradas}"
+					paginator="true" paginatorAlwaysVisible="true" paginatorPosition="both"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {CurrentPageReport} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+					rows="20" rowsPerPageTemplate="10,20,30,40" currentPageReportTemplate="Página {currentPage} de {totalPages} - {totalRecords} registro(s)"
+					resizableColumns="true" rowKey="#{noticia.id}" rowIndexVar="rowIndex" emptyMessage="#{msg['aviso.VAZIO']}" rowStyleClass="#{noticia.ativa ? null : 'label-gray'}" style="margin-top: -4px;">
+					
+					<f:facet name="header">
+						<p:toolbar>
+							<p:toolbarGroup align="left" style="border: 0px;">
+								<p:commandButton value="Incluir" icon="fa fa-file" actionListener="#{cadastroNoticiaBean.onIncluir()}" 
+									update="frmNoticia:msgNoticia :dlgCadastrar" oncomplete="PF('dlg_cadastrar').show();" style="margin-left: 3px;">
+									<p:resetInput target="frmCadastrar"/>
+									
+									<f:setPropertyActionListener value="Incluir" target="#{acao}"/>
+								</p:commandButton>
+							</p:toolbarGroup>
+							
+							<p:toolbarGroup align="right">
+								<h:outputText value="Filtro:"/>
+								&nbsp;  
+								<p:inputText id="globalFilter" onkeypress="if (event.keyCode == 13) {
+																		       PF('dtb_noticia').filter();
+
+							       											   return false;
+																		   }" style="width: 150px;"/>
+							</p:toolbarGroup>
+						</p:toolbar> 
+					</f:facet>
+					
+					<p:ajax event="filter" listener="#{cadastroNoticiaBean.onFiltrar()}" update="dtbNoticia"/>
+							
+					<p:column headerText="Título" sortBy="#{noticia.titulo}" styleClass="noticia-titulo">
+						<h:outputText value="#{noticia.titulo}"/>
+					</p:column>
+					
+					<p:column headerText="Descrição" sortBy="#{noticia.descricao}" styleClass="noticia-descricao">
+						<h:outputText value="#{noticia.descricao}"/>
+					</p:column>
+					
+					<p:column styleClass="noticia-acao">
+						<p:commandLink title="Detalhar" actionListener="#{cadastroNoticiaBean.onDetalhar(noticia)}" 
+							update="frmNoticia:msgNoticia :dlgCadastrar" oncomplete="PF('dlg_cadastrar').show();">
+							<i class="fa fa-eye"/>
+							
+							<f:setPropertyActionListener value="Detalhar" target="#{acao}"/>
+						</p:commandLink>
+						<p:spacer width="8"/>
+						<p:commandLink title="Alterar" actionListener="#{cadastroNoticiaBean.onAlterar(noticia)}" 
+							update="frmNoticia:msgNoticia :dlgCadastrar" oncomplete="PF('dlg_cadastrar').show();">
+							<i class="fa fa-edit"/>
+							
+							<p:resetInput target="frmCadastrar"/>
+							
+							<f:setPropertyActionListener value="Alterar" target="#{acao}"/>
+						</p:commandLink>
+						<p:spacer width="8"/>
+						<p:commandLink title="Excluir" action="#{cadastroNoticiaBean.excluir(noticia)}" update="frmNoticia:msgNoticia" oncomplete="PF('dtb_noticia').filter(); $(window).scrollTop(0);">
+							<i class="fa fa-trash"/>
+						
+							<p:confirm header="Excluir" message="#{msg['aviso.CONFIRMAR']}"/>
+						</p:commandLink>
+					</p:column>
+					
+					<p:column filterMatchMode="contains" filterBy="#{noticia.titulo}" rendered="false"/>
+					<p:column filterMatchMode="contains" filterBy="#{noticia.descricao}" rendered="false"/>
+				</p:dataTable>
+			</p:panelGrid>
+		</h:form>
+						
+		<!-- cadastrar. -->
+		<p:dialog id="dlgCadastrar" widgetVar="dlg_cadastrar" header="#{acao}" resizable="false" modal="true" position="center"
+		 	width="auto" height="auto" closable="true" closeOnEscape="true" fitViewport="true" responsive="true" styleClass="dialog">
+			<h:form id="frmCadastrar">
+				<p:focus for="titulo"/>
+				
+				<h:panelGrid columns="1" rendered="#{not empty cadastroNoticiaBean.noticia}">
+					<p:messages id="msgCadastrar" redisplay="false" closable="true"/>
+					
+					<p:panel style="margin-bottom:0.5em;">
+						<p:outputPanel rendered="#{acao.equals('Detalhar')}">
+							<h:panelGrid columns="2" width="700" columnClasses="nome largura20" rowClasses="valor">
+								<f:facet name="header">
+									<div align="left">
+										<hr class="hr-header"/>
+									</div>
+								</f:facet>
+								
+								<p:outputLabel value="Título:"/>
+								<h:outputText value="#{cadastroNoticiaBean.noticia.titulo}"/>
+								
+								<p:outputLabel value="Descrição:"/>
+							 	<h:outputText value="#{cadastroNoticiaBean.noticia.descricao}" escape="false"/>
+								
+								<p:outputLabel value="Ativa:"/>
+								<p:selectBooleanCheckbox value="#{cadastroNoticiaBean.noticia.ativa}" disabled="true"/>
+								
+								<f:facet name="footer">
+									<hr class="hr-footer"/>
+									
+									<p:commandButton value="Fechar" icon="fa fa-window-close" immediate="true" oncomplete="PF('dlg_cadastrar').hide();"/>
+								</f:facet>
+							</h:panelGrid>
+						</p:outputPanel>
+						
+						<p:outputPanel rendered="#{not acao.equals('Detalhar')}">
+							<h:panelGrid columns="2" width="850" columnClasses="nome largura20" rowClasses="valor">
+								<f:facet name="header">
+									<div align="left" style="padding: 0; margin: 0;">
+										<hr class="hr-header"/>
+									</div>
+								</f:facet>
+								
+								<p:outputLabel value="Título:" for="titulo"/>
+								<p:inputText value="#{cadastroNoticiaBean.noticia.titulo}" id="titulo" size="50" maxlength="255" required="true" requiredMessage="#{msg['validacao.cadastro.noticia.TITULO']}"/>
+								
+							 	<p:outputLabel value="Descrição:" for="descricao"/>
+							 	<pe:ckEditor id="descricao" required="true" requiredMessage="#{msg['validacao.cadastro.noticia.DESCRICAO']}"
+								 	toolbar="[[ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript','-', 'RemoveFormat' ],[ 'Styles', 'Format', 'Font', 'FontSize' ],
+							                  [ 'TextColor', 'BGColor' ],[ 'Image', 'Table', 'HorizontalRule', 'SpecialChar', 'PageBreak' ],[ 'Link', 'Unlink'],
+							                  [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-','Blockquote','-', 'JustifyLeft', 'JustifyCenter','JustifyRight', 'JustifyBlock' ],
+							                  [ 'Find', 'Replace', '-', 'SelectAll', '-', 'SpellChecker', 'Scayt' ],[ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo','Redo' ],[ 'Preview', 'Print']]"  
+							 		value="#{cadastroNoticiaBean.noticia.descricao}" checkDirtyInterval="0" width="750" height="100">  
+								</pe:ckEditor>
+								
+								<p:outputLabel value="Ativa:" for="ativa"/>
+								<p:selectBooleanCheckbox value="#{cadastroNoticiaBean.noticia.ativa}" id="ativa"/>
+							 	
+								<f:facet name="footer">
+									<hr class="hr-footer"/>
+									
+									<p:outputLabel value="* campo obrigatório"/>
+									<br/><br/>
+									
+									<p:commandButton value="Salvar" icon="fa fa-save" action="#{cadastroNoticiaBean.salvar()}" update="frmCadastrar" oncomplete="PF('dtb_noticia').filter();"/> 
+									<p:spacer width="8"/>
+									<p:commandButton value="Fechar" icon="fa fa-window-close" immediate="true" oncomplete="PF('dlg_cadastrar').hide();"/>
+								</f:facet>
+							</h:panelGrid>
+						</p:outputPanel>
+					</p:panel>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+	
+</ui:composition>

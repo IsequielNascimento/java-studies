@@ -1,0 +1,51 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+
+	<div align="left">
+		<a href="#" class="aw-toggle js-toggle">
+			<i class="fa fa-bars"/>
+		</a>
+		<h:graphicImage library="images" style="position: fixed;" name="logo_tre_pagina.png" width="205"/>
+	</div>
+
+	<div class="titulo-sistema">
+		<h:outputLabel value="#{app['sistema.SIGLA']}"/>
+		<div class="titulo-desc-sistema">
+			<h:outputLabel value="#{app['sistema.NOME']}"/>
+		</div>
+	</div>
+
+	<div class="logo-sistema">
+		<p:graphicImage url="/resources/images/logo_sistema.png" height="45"/>
+	</div>
+
+	<div class="aw-linebar"/>
+
+	<h:form id="frmCabecalho">
+		<p:toolbar style="border-radius: 0px;" id="tbrSuperior" styleClass="aw-toolbar">
+			<p:toolbarGroup align="left" style="padding-top: 0.4em; padding-bottom:0.4em; margin-left: 0.6em;" styleClass="div-data">
+				<h:panelGrid columns="1">
+					<p:outputLabel value="#{dataUtil.getAsString('EEEE, d \'de\' MMMM \'de\' yyyy', now, true)}"/>
+				</h:panelGrid>
+			</p:toolbarGroup>
+
+			<p:toolbarGroup align="right" style="padding-top: 0.1em;">
+				<p:separator rendered="#{sessaoBean.logado}"/>
+				
+				<p:commandButton value="Sair" icon="fa fa-sign-out" action="#{loginBean.sair()}" ajax="false" update="frm-toolbar" rendered="#{sessaoBean.logado}" style="margin-top:0.1em; margin-right: 0.6em;"/>
+			</p:toolbarGroup>
+
+			<p:toolbarGroup align="right" style="padding-top: 0.1em;">
+				<h:panelGrid columns="2" cellspacing="0" cellpadding="0">
+					<p:outputPanel rendered="#{sessaoBean.logado}" style="margin-top: 5px;">
+						<ui:fragment>
+							<i class="fa fa-user"/>
+						</ui:fragment>
+						<p:link value="#{sessaoBean.usuario.nome}" onclick="PF('dlg_usuario').show(); return false;" style="font-weight: bold; margin-left: 0.5em;"/>
+					</p:outputPanel>
+				</h:panelGrid>
+			</p:toolbarGroup>
+		</p:toolbar>
+	</h:form>
+
+</ui:composition>

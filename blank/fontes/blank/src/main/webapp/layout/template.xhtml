@@ -1,0 +1,247 @@
+<?xml version='1.0' encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<f:view xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:p="http://primefaces.org/ui" xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+	<h:html>
+		<h:head>
+			<f:facet name="first">
+				<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+				<meta name="viewport" content="width=device-width, initial-scale=1"/>
+				<meta http-equiv="Content-Language" content="pt-br"/>
+			</f:facet>
+	
+			<title><h:outputText value="#{app['sistema.SIGLA']}"/></title>
+			
+			<link rel="shortcut icon" href="#{request.contextPath}/resources/images/favicon.ico"/>
+	
+			<h:outputStylesheet library="css" name="application.css"/>
+			<h:outputStylesheet library="css" name="themes.css"/>
+			
+			<!-- ícones. -->
+			<h:outputStylesheet library="webjars" name="font-awesome/5.15.3/css/all-jsf.css"/>
+			<h:outputStylesheet library="webjars" name="font-awesome/5.15.3/css/v4-shims-jsf.css"/>
+			
+			<h:outputScript target="body" library="js" name="application.js"/>
+			<h:outputScript target="body" library="js" name="primefaces.js"/>
+		</h:head>
+
+		<h:body>
+			<div class="aw-topbar">
+				<ui:include src="cabecalho.xhtml"/>
+			</div>
+	
+			<div class="aw-sidebar js-sidebar">
+				<ui:include src="menu.xhtml"/>
+			</div>
+			
+			<div class="aw-content js-content">
+				<ui:insert name="content"/>
+			</div>
+			
+			<div class="aw-footer">
+				<ui:include src="rodape.xhtml"/>
+			</div>
+		</h:body>
+
+		<!-- status. -->
+		<p:ajaxStatus onstart="PF('dlg_status').show();" onsuccess="PF('dlg_status').hide();"/>
+		<p:dialog id="dlgStatus" widgetVar="dlg_status" resizable="false" modal="true" position="center"
+			closable="false" visible="false" draggable="false" showHeader="false" responsive="true">
+			<p:outputPanel>
+				<i class="fa fa-spinner fa-spin" style="font-size: 2.5em;"/>
+			</p:outputPanel>
+		</p:dialog>
+		
+		<!-- perfil. -->
+		<p:dialog id="dlgSelecionarPerfil" widgetVar="dlg_selecionar_perfil" header="Perfil" resizable="false" modal="true" position="center"
+			width="auto" height="auto" closable="true" closeOnEscape="true" responsive="true" styleClass="dialog" onHide="document.getElementById('frmSelecionarPerfil:cmbCancelar').click();">
+			<h:form id="frmSelecionarPerfil">
+				<h:panelGrid columns="1" width="750" cellpadding="0" cellspacing="0">
+					<p:messages id="msgSelecionarPerfil" redisplay="false" closable="true"/>
+	
+					<p:dataTable id="dtbSelecionarPerfil" var="perfil" widgetVar="dtb_selecionar_perfil" value="#{perfilBean.perfis}"
+						selection="#{perfilBean.perfil}"
+						resizableColumns="true" rowKey="#{perfil.id}" rowIndexVar="rowIndex"
+						style="display: block; max-height: 700px; overflow: auto;">
+						
+						<p:column selectionMode="single" styleClass="selectionCheckBox perfil-checkbox"/>
+						
+						<p:column headerText="Perfil" sortBy="#{perfil.descricao}" styleClass="perfil-descricao">
+							<h:outputText value="#{perfil.descricao}"/>
+						</p:column>
+						<p:column headerText="Unidade de dados" styleClass="perfil-unidadeDados">
+							<h:outputText value="&lt;Lotação de usuário&gt;" rendered="#{empty perfil.unidadesDados}"/>
+							<p:outputPanel rendered="#{not empty perfil.unidadesDados}" style="display: block; max-height: 100px; overflow: auto;">
+								<p:repeat var="unidade" value="#{perfil.unidadesDados}">
+									<p:column>
+										<h:outputText value="#{unidade.descricaoComNome}"/>
+										
+										<br/>
+									</p:column>
+								</p:repeat>
+							</p:outputPanel>
+						</p:column>
+					</p:dataTable>
+					
+					<p:spacer height="8"/>
+					
+					<f:facet name="footer">						
+						<hr class="hr-footer"/>
+						
+						<p:commandButton value="Confirmar" icon="fa fa-check" action="#{perfilBean.confirmar()}" update="msgSelecionarPerfil :frmMenu dlgUsuario"/>
+						<p:spacer width="8"/> 
+						<p:commandButton id="cmbCancelar" value="Cancelar" icon="fa fa-times" actionListener="#{perfilBean.onCancelar()}" immediate="true" oncomplete="PF('dlg_selecionar_perfil').hide();"/>
+					</f:facet>
+				</h:panelGrid>
+			</h:form>
+		</p:dialog>
+
+		<!-- usuário. -->
+		<p:dialog id="dlgUsuario" widgetVar="dlg_usuario" header="Usuário" resizable="false" modal="true" position="center"
+			width="auto" height="auto" closable="true" closeOnEscape="true" responsive="true" styleClass="dialog">
+			<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+				<p:panel styleClass="panel-dialog">
+					<div style="text-align: center;">
+						<i class="fa fa-user" style="font-size: 7em;"/>
+					</div>
+					
+					<hr class="hr-header"/>
+					
+					<h:panelGrid columns="2" width="550" columnClasses="nome largura30" rowClasses="valor largura30" cellpadding="5">
+						<p:outputLabel value="Matrícula:"/>
+						<p:outputLabel value="#{sessaoBean.usuario.matricula}"/>
+						<p:outputLabel value="Nome:"/>
+						<p:outputLabel value="#{sessaoBean.usuario.nome}"/>
+						<p:outputLabel value="Tipo:"/>
+						<p:outputLabel value="#{sessaoBean.usuario.tipoEnum.descricao}"/>
+						<p:outputLabel value="E-mail:"/>
+						<p:outputLabel value="#{sessaoBean.usuario.email}"/>
+						<p:outputLabel value="Lotação:"/>
+						<p:outputPanel rendered="#{not sessaoBean.usuario.tipo.equals('A')}">
+							<p:outputLabel value="#{sessaoBean.usuario.unidade.descricaoComNome}"/>
+						</p:outputPanel>
+						<p:outputPanel rendered="#{sessaoBean.usuario.tipo.equals('A')}">
+							<p:repeat var="unidade" value="#{sessaoBean.unidadesParaAutoridade}">
+								<p:outputLabel value="#{unidade}"/>
+								
+								<br/>
+							</p:repeat>
+						</p:outputPanel>
+					</h:panelGrid>
+					
+					<ui:fragment rendered="#{not empty sessaoBean.perfil.id}">
+						<hr class="hr-title"/>
+						
+						<h:panelGrid columns="2" width="550" columnClasses="nome largura30" rowClasses="valor largura30" cellpadding="5">
+							<p:outputLabel value="Perfil:"/>
+							<p:outputPanel>
+								<p:outputLabel value="#{sessaoBean.perfil.descricao}"/>
+								&nbsp;
+								<p:commandLink title="Alterar" rendered="#{sessaoBean.perfis.size() > 1}" oncomplete="PF('dlg_selecionar_perfil').show();">
+									<i class="fa fa-edit"/>
+								</p:commandLink>
+							</p:outputPanel>
+						</h:panelGrid>
+						
+						<h:panelGrid columns="2" width="550" columnClasses="nome largura30" rowClasses="valor largura30" cellpadding="5"
+							rendered="#{empty sessaoBean.perfil.unidadesDados}" style="margin-top: -2px;">
+							<p:outputLabel value="Unidade de dados:"/>
+							<h:outputText value="&lt;Lotação de usuário&gt;"/>
+						</h:panelGrid>
+						<p:tabView rendered="#{not empty sessaoBean.perfil.unidadesDados}" style="margin-top: 8px; margin-bottom: -2px;">
+							<p:tab title="Unidade de dados">
+								<h:panelGrid columns="1" width="550" style="margin-left: -18px; margin-right: -18px;">
+									<p:outputPanel style="display: block; max-height: 150px; overflow: auto;">
+										<p:repeat var="unidade" value="#{sessaoBean.perfil.unidadesDados}">
+											<p:column>
+												<h:outputText value="#{unidade.sigla} - #{unidade.nome}"/>
+												
+												<br/>
+											</p:column>
+										</p:repeat>
+									</p:outputPanel>
+								</h:panelGrid>
+							</p:tab>
+						</p:tabView>
+					</ui:fragment>
+					
+					<hr class="hr-footer"/>		
+					
+					<p:commandButton value="Fechar" icon="fa fa-window-close" immediate="true" oncomplete="PF('dlg_usuario').hide();"/>
+				</p:panel>
+			</h:panelGrid>
+		</p:dialog>
+		
+		<!-- contato. -->
+		<p:dialog id="dlgContato" widgetVar="dlg_contato" header="Contato" resizable="false" modal="true" position="center"
+			width="auto" height="auto" closable="true" closeOnEscape="true" responsive="true" styleClass="dialog">
+			<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+				<p:panel styleClass="panel-dialog">
+					<div style="text-align: center;">
+						<i class="fa fa-envelope" style="font-size: 7em;"/>
+					</div>
+					
+					<hr class="hr-header"/>
+				
+					<h:panelGrid columns="2" width="400" columnClasses="nome largura30" rowClasses="valor largura30" cellpadding="5">
+						<h:outputLabel value="Gestor:"/>
+						<h:outputLabel value="#{unidadeUtil.getGestor() != null ? fn:toLowerCase(unidadeUtil.getGestor().sigla).concat('@')
+																				 	  					 					   .concat(app['tre.DOMINIO']) : ''}"/>
+						<h:outputLabel value="Gestor técnico:"/>
+						<h:outputLabel value="#{unidadeUtil.getGestorTecnico() != null ? fn:toLowerCase(unidadeUtil.getGestorTecnico().sigla).concat('@')
+																																			 .concat(app['tre.DOMINIO']) : ''}"/>
+						<h:outputLabel value="Suporte:"/>
+						<h:outputLabel value="chamados@#{app['tre.DOMINIO']}" styleClass="label-negrito"/>
+					</h:panelGrid>
+					
+					<hr class="hr-footer"/>
+					
+					<p:commandButton value="Fechar" icon="fa fa-window-close" immediate="true" oncomplete="PF('dlg_contato').hide();"/>
+				</p:panel>
+			</h:panelGrid>
+		</p:dialog>
+	
+		<!-- sobre. -->
+		<p:dialog id="dlgSobre" widgetVar="dlg_sobre" header="Sobre" resizable="false" modal="true" position="center"
+			width="auto" height="auto" closable="true" closeOnEscape="true" responsive="true" styleClass="dialog">
+			<h:panelGrid columns="1" cellpadding="0" cellspacing="0">
+				<p:panel styleClass="panel-dialog">
+					<h:panelGrid columns="1" width="100%" columnClasses="grid-inline" style="text-align: center;">
+						<h:panelGrid columns="2" width="100%">
+							<p:graphicImage url="/resources/images/logo_sistema.png" height="45"/>
+							<h:panelGrid cellpadding="0" cellspacing="0">
+								<h:outputLabel value="#{app['sistema.SIGLA']}" styleClass="titulo-sistema" style="margin: 0px; float: left; color: #000;"/>
+								<h:outputLabel value="#{app['sistema.NOME']}" styleClass="titulo-desc-sistema" style="margin: 0px; color: #000;"/>
+							</h:panelGrid>
+						</h:panelGrid>
+					</h:panelGrid>
+					
+					<hr class="hr-header"/>
+					
+					<h:panelGrid columns="2" width="400" columnClasses="nome largura30" rowClasses="valor largura30" cellpadding="5">
+						<h:outputLabel value="Versão:"/>
+						<h:outputLabel value="#{mvn['sistema.VERSAO']}"/>
+						<h:outputLabel value="Data:"/>
+						<h:outputLabel value="#{mvn['sistema.DATA']}"/>
+						<h:outputLabel value="Ambiente:"/>
+						<h:outputLabel value="#{ambienteUtil.getDescricao()}"/>
+					</h:panelGrid>
+					
+					<hr class="hr-footer"/>
+					
+					<p:commandButton value="Fechar" icon="fa fa-window-close" immediate="true" oncomplete="PF('dlg_sobre').hide();"/>
+				</p:panel>
+			</h:panelGrid>
+		</p:dialog>
+		
+		<!-- confirmar. -->
+		<p:confirmDialog id="cdgConfirmar" global="true" responsive="true" width="350" closable="true" closeOnEscape="true">
+			<p:commandButton value="Sim" icon="fa fa-check-circle" type="button" styleClass="ui-confirmdialog-yes"/>
+			<p:spacer width="4"/>
+			<p:commandButton value="Não" icon="fa fa-times-circle" type="button" styleClass="ui-confirmdialog-no"/>
+		</p:confirmDialog>
+	</h:html>
+	
+</f:view>

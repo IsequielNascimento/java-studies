@@ -1,0 +1,27 @@
+version: '3.3'
+services:
+  blank:
+    image: nexus.tre-ce.jus.br/blank:${VERSAO}
+    ports:
+      - '8400:8080'
+    networks:
+      - trece
+    restart: unless-stopped
+
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "udp://cevmdocker-zbx.tre-ce.gov.br:1514"
+        labels: blank
+        tag: "blank"
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/blank/"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+      
+networks:
+  trece:
+    external: true

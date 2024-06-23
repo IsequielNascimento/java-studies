@@ -11,6 +11,7 @@ public class Buy {
 		totalValue = value;
 		numberInstallments = 1;
 		
+	
 	}
 	
 	//Installments

@@ -10,6 +10,8 @@ public class Employee {
 	int contractHours;
 	int totalExtraHours;
 	
+	
+	
 	void workedHours() {
 		workedHours = workedDays * 4;
 	}
@@ -25,6 +27,15 @@ public class Employee {
 		System.out.println("Total hours in employee "+ name + " database: "+getAnnualLeave() + ".");
 	}
 	
+	int salary;
+	float liquidSalary;
 	
+	//construtor
+	
+	Employee(int salary /*parêmetro*/){
+		this.salary = salary;
+		liquidSalary = 300;
+	}
 	
 }
+

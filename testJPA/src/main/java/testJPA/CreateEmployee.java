@@ -8,7 +8,7 @@ public class CreateEmployee {
 
    public static void main( String[ ] args ) {
    
-      EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "Eclipselink_JPA" );
+      EntityManagerFactory emfactory = Persistence.createEntityManagerFactory( "testJPA" );
       
       EntityManager entitymanager = emfactory.createEntityManager( );
       entitymanager.getTransaction( ).begin( );

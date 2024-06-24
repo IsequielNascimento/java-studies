@@ -1,0 +1,8 @@
+#spring.application.name=jpa
+
+spring: 
+datasource:
+   username: postgres
+   password: studies
+   driver-class-name: org.postgresql.DRIVER  
+

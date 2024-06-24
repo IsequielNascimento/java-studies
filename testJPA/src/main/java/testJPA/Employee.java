@@ -9,9 +9,8 @@ import javax.persistence.Access;
 import static javax.persistence.AccessType.FIELD;
 import static javax.persistence.AccessType.PROPERTY;
 
-@Entity
-@Table
-@Access(PROPERTY)
+@Entity(name = "teste")
+@Table(name = "teste")
 public class Employee {
 
    @Id
@@ -23,15 +22,16 @@ public class Employee {
    private String deg;
    private int confia;
    
-   public Employee(int eid, String ename, double salary, String deg, int confia) {
+   public Employee(int eid, String ename, double salary, String deg) {
       super( );
       this.eid = eid;
       this.ename = ename;
       this.salary = salary;
       this.deg = deg;
-      this.confia = confia;
+
    }
 
+   
    public Employee( ) {
       super();
    }

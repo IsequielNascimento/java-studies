@@ -1,0 +1,30 @@
+#spring.application.name=jpa
+spring:
+  application:
+    name: jpa
+
+#spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+#spring.datasource.username=postgres
+#spring.datasource.password=postgres
+#spring.datasource.driver-class-name=com.postgres.jdbc.Driver
+#spring.datasource.driver-class-name=org.postgresql.Driver
+
+
+#spring.jpa.database-platform=org.hibernate.dialect.MySQL5Dialect
+#spring.jpa.database=postgresql
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database: postgresql
+    show-sql: true
+
+#spring.jpa.database-platform=hibernate.dialect.PostgreSQLDialect
+#spring.jpa.generate-ddl=true
+#spring.jpa.hibernate.ddl-auto=create-drop
+#spring.jpa.show-sql=true

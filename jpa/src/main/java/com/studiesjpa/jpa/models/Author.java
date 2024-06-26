@@ -2,7 +2,9 @@ package com.studiesjpa.jpa.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +14,15 @@ import lombok.NoArgsConstructor;
 public class Author {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(
+			strategy = GenerationType.SEQUENCE,
+			generator = "author_sequence"
+			)
+	@SequenceGenerator(
+			name = "author_sequence",
+			sequenceName = "author_sequence",
+			allocationSize=1
+			)
 	private Integer Id;
 	
 	private String firstName;

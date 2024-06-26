@@ -9,35 +9,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.TableGenerator;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Builder
 public class Author {
 
 	@Id
 	@GeneratedValue
-	/*(
-			strategy = GenerationType.SEQUENCE,
-			generator = "author_sequence"
-			)
-	/*@SequenceGenerator(
-			name = "author_sequence",
-			sequenceName = "author_sequence",
-			allocationSize=1
-			)*/
-	/*@TableGenerator(
-			
-			name = "author_id_gen",
-			table = "id_generator",
-			pkColumnName = "id_name",
-			valueColumnName = "id_value",
-			allocationSize = 1
-			
-			)
-	*/
 	private Integer Id;
 	
 	@Column(
@@ -70,7 +55,6 @@ public class Author {
 			
 			)
 	private LocalDateTime lastModif;
-	
 
 	
 }
